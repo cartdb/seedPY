@@ -4,4 +4,4 @@
 2. Download hash.py.
 3. Open Command Prompt.
 4. Type `cd downloads`.
-5. Type `python hash.py [size] [hash]`. The hash argument is optional.
+5. Type `python hash.py [size] [sha512]`. The hash argument is optional.
