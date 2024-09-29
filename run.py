@@ -13,8 +13,7 @@ seed = 0
 start = datetime.now()
 while True:
     file = open("file" + str(bytes) + ".bin", "wb")
-    if len(sys.argv) == 4:
-        random.seed(seed)
+    random.seed(seed)
     file.write(random.randbytes(bytes))
     file.close()
     file = open("file" + str(bytes) + ".bin", "rb")
