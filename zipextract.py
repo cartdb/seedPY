@@ -8,7 +8,7 @@ for item in os.listdir(folder):
         lists.append(item)
         zipfile.ZipFile(item).extractall()
 for items in range(len(lists)):
-    os.system("del " + lists[items])
+    os.system("move " + lists[items] + " ..")
 for item in os.listdir(folder):
     if item.endswith(extension):
         zipfile.ZipFile(item).extractall()
