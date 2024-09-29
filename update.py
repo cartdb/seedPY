@@ -17,5 +17,5 @@ while True:
     line = line.split(" SHA512: ")[0]
     line = line.replace("\\n", "")
     hashes.append(line)
-rom = random.choices(hashes)
+rom = random.choice(hashes)
 os.system("python run.py " + str(os.path.getsize(rom)) + " " + rom)
