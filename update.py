@@ -18,4 +18,4 @@ while True:
     line = line.replace("\\n", "")
     hashes.append(line)
 rom = random.choice(hashes)
-os.system("python run.py " + str(os.path.getsize(rom)) + " " + rom)
+os.system('python run.py ' + str(os.path.getsize(rom)) + ' "' + rom + '"')
