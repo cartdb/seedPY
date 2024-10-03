@@ -1,6 +1,6 @@
 import os
 import zipfile
-folder = '../roms'
+folder = os.getcwd()
 extension = ".zip"
 lists = []
 for item in os.listdir(folder):
