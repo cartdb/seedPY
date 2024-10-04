@@ -3,21 +3,29 @@ import sys
 if len(sys.argv) != 2:
     raise Exception("Too many or too little arguments!")
 file = sys.argv[1]
-update = open("update.bat", "w")
-update.write('nesgodisasm.exe -a nesasm "' + file + '"')
-update.close()
-os.system("update.bat")
-os.system("del update.bat")
+os.system('nesgodisasm.exe -a nesasm "' + file + '"')
 filename = file.replace(".nes", ".asm")
 fileread = open(filename, "r")
 flag = False
 chrrom = []
 lines = []
-if os.path.getsize(file) != 40976 and os.path.getsize(filename) != 671538:
-    raise Exception("The file size must be 40976 bytes!")
+banks = []
+lineCount = 0
 while True:
     line = fileread.readline()
-    if ".bank 4" in line:
+    if not line:
+        lineCount += 1
+    else:
+        lineCount = 0
+    if ".bank" in line:
+        banks.append(line)
+    if lineCount > 2:
+        break
+fileread.close()
+fileread = open(filename, "r")
+while True:
+    line = fileread.readline()
+    if banks[len(banks) - 1] in line:
         flag = True
         lines.append(line)
         continue
@@ -35,6 +43,7 @@ fileread.close()
 chrfilename = filename.replace(".asm", ".chr")
 chr = open(chrfilename, "wb")
 chr.write(bytearray(chrrom))
+chr.close()
 asmfile = open(filename, "w")
 linesWritten = 0
 for line in range(len(lines)):
@@ -43,3 +52,4 @@ for line in range(len(lines)):
     else:
         asmfile.write("\n" + lines[line])
 asmfile.write(' .incbin "' + chrfilename + '"')
+asmfile.close()
