@@ -2,28 +2,22 @@ import os
 folder = os.getcwd()
 for item in os.listdir(folder):
     if item.endswith(".nes"):
-        os.system('nessplitter.exe "' + item + '"')
-        os.system('chrtopng.exe "' + item.replace(".nes", ".chr") + '" "' + item.replace(".nes", ".png") + '"')
-        os.remove(item)
-        os.system('nesasm "' + item.replace(".nes", ".asm") + '"')
-        if os.path.isfile(item) == False:
+        if os.path.getsize(item) == 40976 or os.path.getsize(item) == 24592:
+            os.system('nessplitter.exe "' + item + '"')
+            os.system('chrtopng.exe "' + item.replace(".nes", ".chr") + '" "' + item.replace(".nes", ".png") + '"')
+            os.remove(item)
+            os.system('nesasm "' + item.replace(".nes", ".asm") + '"')
+            if os.path.isfile(item) == False:
+                print(item)
+                if os.path.isfile(item.replace(".nes", ".asm")):
+                    os.remove(item.replace(".nes", ".asm"))
+                if os.path.isfile(item.replace(".nes", ".chr")):
+                    os.remove(item.replace(".nes", ".chr"))
+                if os.path.isfile(item.replace(".nes", ".png")):
+                    os.remove(item.replace(".nes", ".png"))
+        else:
+            os.remove(item)
             print(item)
-            try:
-                os.remove(item)
-            except:
-                pass
-            try:
-                os.remove(item.replace(".nes", ".asm"))
-            except:
-                pass
-            try:
-                os.remove(item.replace(".nes", ".png"))
-            except:
-                pass
-            try:
-                os.remove(item.replace(".nes", ".chr"))
-            except:
-                pass
 os.system("mkdir asm")
 os.system("mkdir chr")
 os.system("mkdir png")
