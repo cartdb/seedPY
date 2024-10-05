@@ -9,17 +9,21 @@ for item in os.listdir(folder):
         if os.path.isfile(item) == False:
             print(item)
             try:
+                os.remove(item)
+            except:
+                pass
+            try:
                 os.remove(item.replace(".nes", ".asm"))
             except:
-                continue
+                pass
             try:
                 os.remove(item.replace(".nes", ".png"))
             except:
-                continue
+                pass
             try:
                 os.remove(item.replace(".nes", ".chr"))
             except:
-                continue
+                pass
 os.system("mkdir asm")
 os.system("mkdir chr")
 os.system("mkdir png")
