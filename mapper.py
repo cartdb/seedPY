@@ -1,6 +1,6 @@
 import os
 import sys
-if len(sys.argv) != 1 or len(sys.argv) != 2:
+if len(sys.argv) != 1 and len(sys.argv) != 2:
     raise Exception("Too many or too little arguments!")
 if len(sys.argv) == 2:
     output = sys.argv[1]
@@ -36,5 +36,6 @@ for item in os.listdir(os.getcwd()):
         if len(sys.argv) == 2:
             if linesWritten == 0:
                 output.write(item + " Mapper: " + str(mapper))
+                linesWritten += 1
             else:
                 output.write("\n" + item + " Mapper: " + str(mapper))
