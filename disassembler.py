@@ -15,12 +15,13 @@ input = open(file, "rb")
 fileread = input.read()
 bytefour = fileread[4:5]
 bytefour = int.from_bytes(bytefour)
-print("PRG ROM Banks: " + bytefour)
+print("PRG ROM Banks: " + str(bytefour))
 bytefive = fileread[5:6]
 bytefive = int.from_bytes(bytefive)
-print("CHR ROM Banks: " + bytefive)
+print("CHR ROM Banks: " + str(bytefive))
 bytesix = fileread[6:7]
 bytesix = int.from_bytes(bytesix)
+input.close()
 if bytesix&2**0 != 0:
     print("Mirroring: Vertically Mirrored")
 else:
@@ -68,8 +69,9 @@ del bytesArr[:16]
 if os.path.isfile("asm6f.exe") == False:
     raise Exception("asm6f.exe is not installed! Download asm6f at https://github.com/freem/asm6f and extract the files to " + workdir)
 byteCount = 0
-if fileread[0:4] != b'\x4e\x45\x53\x1a' or os.path.getsize(file) != (bytefour * 16384) + (bytefive * 8192):
-    print(fileread[0:4])
+if fileread[0:4] != b'\x4e\x45\x53\x1a' and fileread[0:4] != b'NES\x1a' or os.path.getsize(file) != (bytefour * 16384) + (bytefive * 8192) + 16:
+    if file.endswith(".nes"):
+        os.remove(file)
     raise Exception("Not a valid INES ROM file! A valid INES ROM file will have the characters [4E 45 53 1A] followed by [Number of PRG Banks] [Number of CHR Banks] and then followed by zeroes [00 00 00 00 00 00 00 00 00]! Edit the ROM in a hex editor if required.")
 input = open(file, "wb")
 if fileread[7:15] != b'\x00\x00\x00\x00\x00\x00\x00\x00\x00':
