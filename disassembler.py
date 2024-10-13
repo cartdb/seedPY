@@ -68,7 +68,6 @@ for byte in pathlib.Path(file).read_bytes():
 del bytesArr[:16]
 if os.path.isfile("asm6f.exe") == False:
     raise Exception("asm6f.exe is not installed! Download asm6f at https://github.com/freem/asm6f and extract the files to " + workdir)
-byteCount = 0
 if fileread[0:4] != b'\x4e\x45\x53\x1a' and fileread[0:4] != b'NES\x1a' or os.path.getsize(file) != (bytefour * 16384) + (bytefive * 8192) + 16:
     if file.endswith(".nes"):
         os.remove(file)
@@ -81,31 +80,63 @@ if fileread[7:15] != b'\x00\x00\x00\x00\x00\x00\x00\x00\x00':
 input = open(file, "rb")
 fileread = input.read()
 hash = hashlib.sha512(fileread).hexdigest()
-prgbanks = fileread[4:5]
-chrbanks = fileread[5:6]
-fileoutputname = file.split(".nes")
-fileoutputname = fileoutputname[0]
-fileoutputname = fileoutputname + ".asm"
+fileoutputname = file.replace(".nes", ".asm")
 fileoutput = open(fileoutputname, "w")
 linesWritten = 0
-for byte in pathlib.Path(file).read_bytes():
-    if byte >= 16:
-        hexVersion = hex(byte)
+instructions = []
+bytes = []
+byteread = open("bytes.txt", "r")
+instructionread = open("instructions.txt", "r")
+while True:
+    line = byteread.readline()
+    if not line:
+        break
+    bytes.append(int(line, 16))
+while True:
+    line = instructionread.readline()
+    if not line:
+        break
+    instructions.append(line)
+if len(bytes) != len(instructions):
+    raise Exception(".TXT files are mismatched!")
+flagCount = 0
+filereadbytes = []
+for byteread in pathlib.Path(file).read_bytes():
+    filereadbytes.append(byteread)
+byteread = 0
+while byteread < len(filereadbytes):
+    if filereadbytes[byteread] < 16:
+        instruction = ".DB $0" + hex(filereadbytes[byteread]).replace("0x", "")
     else:
-        hexVersion = "0" + hex(byte)
-    hexVersion = hexVersion.replace("0x", "")
-    instruction = ".DB $" + hexVersion
+        instruction = ".DB $" + hex(filereadbytes[byteread]).replace("0x", "")
+    for byte in range(len(bytes)):
+        if filereadbytes[byteread] == bytes[byte]:
+            if "impl" in instructions[byte]:
+                instruction = instructions[byte].split(" impl")[0]
+            break
     if linesWritten == 0:
         fileoutput.write(instruction)
     else:
         fileoutput.write("\n" + instruction)
     linesWritten += 1
+    byteread += 1
 fileoutput.close()
-os.system('asm6f.exe "' + fileoutputname + '" "' + file + '"')
-filehash = open(file, "rb")
-filehash = filehash.read()
-filehash = hashlib.sha512(filehash).hexdigest()
-if hash == filehash:
-    print("Disassembling complete.")
+input.close()
+os.remove(file)
+if os.path.isfile("assembler.exe"):
+    os.system('assembler.exe "' + fileoutputname)
+elif os.path.isfile("assembler.py"):
+    os.system('python assembler.py "' + fileoutputname)
+else:
+    raise Exception("assembler.exe not found!")
+if os.path.isfile(file):
+    filehash = open(file, "rb")
+    filehash = filehash.read()
+    filehash = hashlib.sha512(filehash).hexdigest()
+    if hash == filehash:
+        print("Disassembling complete.")
+        print(sys.argv[1].replace(".nes", ".asm") + " written (" + str(os.path.getsize(sys.argv[1].replace(".nes", ".asm"))) + " bytes).")
+    else:
+        print("Disassembling failed.")
 else:
     print("Disassembling failed.")
