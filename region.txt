@@ -4,17 +4,25 @@ World
 USA
 USA, Europe
 Italy
+Japan, USA
 China
+Europe
 Spain
 Russia
 Australia
 Korea
+Europe, Asia
 Germany
 Brazil
+USA, Brazil
 France
 Taiwan
 Sweden
 Unknown
+USA, Asia
+USA, Europe, Korea
 Canada
 Europe, Hong Kong
 United Kingdom
+USA, Australia
+Brazil, Spain
