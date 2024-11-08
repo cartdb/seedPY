@@ -1,11 +1,7 @@
 import hashlib
 import zlib
-import os
-file = input("Input File: ")
-if os.path.isfile(file):
-    print("")
-else:
-    raise Exception("File not found!")
+import sys
+file = sys.argv[1]
 file = open(file, "rb")
 file = file.read()
 print("ADLER32:" + hex(zlib.adler32(file)).replace("0x", ""))
